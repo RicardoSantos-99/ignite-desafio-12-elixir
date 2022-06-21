@@ -7,15 +7,13 @@ defmodule Github.Users.Get do
   @request_headers [{"user-agent", "Tesla"}]
 
   plug Tesla.Middleware.Headers, @request_headers
-  plug Tesla.Middleware.BaseUrl, "https://api.github.com"
+  @base_url "https://api.github.com"
   plug Tesla.Middleware.JSON
 
-  def user_repos(login) do
-    ("/users/" <> login <> "/repos")
+  def user_repos(url \\ @base_url, username) do
+    "#{url}/users/#{username}/repos?per_page=1"
     |> get()
-    |> IO.inspect()
     |> handle_get()
-    |> IO.inspect()
   end
 
   defp handle_get({:ok, %Env{status: 200, body: body}}) do
